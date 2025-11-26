@@ -3,12 +3,14 @@ const app = express();
 const mongoose = require("mongoose");
 const authRoutes = require("./routes/auth");
 const itemRoutes = require("./routes/itemRoutes");
+const tradeRoutes = require("./routes/tradeRoutes");
 require("dotenv").config();
 
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/items", itemRoutes);
+app.use("/api/trades",tradeRoutes);
 
 const url = process.env.MONGODB_URI;
 mongoose
