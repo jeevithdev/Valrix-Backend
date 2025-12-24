@@ -5,29 +5,46 @@ exports.createTradeRequest = async (req, res) => {
   try {
     const { offeredItem, requestedItem } = req.body;
 
-    const item = await Item.findById(requestedItem);
-    if (!item) {
-      return res.status(404).json({ message: "Requested item not found" });
+    if (offeredItem === requestedItem) {
+      return res
+        .status(400)
+        .json({ message: "Offered and requested items cannot be the same" });
     }
 
-    if (item.owner.toString() == req.user.id) {
+    const [reqItem, offItem] = await Promise.all([
+      Item.findById(requestedItem),
+      Item.findById(offeredItem),
+    ]);
+
+    if (!reqItem || !offItem) {
+      return res.status(404).json({ message: "Item not found" });
+    }
+    if (reqItem.owner.toString() == req.user.id) {
       return res.status(400).json({ message: "Cannot request your own item" });
     }
+    if (offItem.owner.toString() != req.user.id) {
+      return res
+        .status(403)
+        .json({ message: "You can only offer your own items" });
+    }
+    const existingTrade = await Trade.findOne({
+      offeredItem,
+      requestedItem,
+      requester: req.user.id,
+      status: "pending",
+    });
 
+    if (existingTrade) {
+      return res.status(400).json({ message: "Trade request already exists" });
+    }
     let trade = new Trade({
       offeredItem,
       requestedItem,
       requester: req.user.id,
-      owner: item.owner,
+      owner: reqItem.owner,
     });
 
     await trade.save();
-
-      trade = await Trade.findById(trade._id)
-        .populate("offeredItem", "title status")
-        .populate("requestedItem", "title status")
-        .populate("requester", "name email")
-        .populate("owner", "name email");
 
     res.json({
       message: "Trade request sent",
@@ -74,17 +91,42 @@ exports.tradeAccept = async (req, res) => {
       return res.status(403).json({ message: "Not authorized" });
     }
 
-    if(trade.status !== "pending"){
-        return res.status(400).json({message:"Trade already processed"});
+    if (trade.status !== "pending") {
+      return res.status(400).json({ message: "Trade already processed" });
+    }
+    const [offeredItem, requestedItem] = await Promise.all([
+      Item.findOneAndUpdate(
+        { _id: trade.offeredItem, status: "available" },
+        { status: "traded" }
+      ),
+      Item.findOneAndUpdate(
+        { _id: trade.requestedItem, status: "available" },
+        { status: "traded" }
+      ),
+    ]);
+    if (!offeredItem || !requestedItem) {
+      return res.status(409).json({
+        message: "One of the items is no longer available",
+      });
     }
 
-    trade.status = "accepted"
+    trade.status = "accepted";
     await trade.save();
 
-    await Item.findByIdAndUpdate(trade.offeredItem, {status:"traded"});
-    await Item.findByIdAndUpdate(trade.requestedItem, {status:"traded"});
+    await Trade.updateMany(
+      {
+        _id: { $ne: trade._id },
+        status: "pending",
 
-    res.json({message:"Trade accepted successfully"});
+        $or: [
+          { offeredItem: trade.offeredItem },
+          { requestedItem: trade.requestedItem },
+        ],
+      },
+      { status: "rejected" }
+    );
+
+    res.json({ message: "Trade accepted successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -101,15 +143,14 @@ exports.tradeReject = async (req, res) => {
       return res.status(403).json({ message: "Not authorized" });
     }
 
-    if(trade.status !== "pending"){
-        return res.status(400).json({message:"Trade already processed"});
+    if (trade.status !== "pending") {
+      return res.status(400).json({ message: "Trade already processed" });
     }
 
-    trade.status = "rejected"
+    trade.status = "rejected";
     await trade.save();
 
-
-    res.json({message:"Trade rejected"});
+    res.json({ message: "Trade rejected" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
