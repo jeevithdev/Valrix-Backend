@@ -29,6 +29,7 @@ const itemSchema = new mongoose.Schema({
   status: {
     type: String,
     enum: ["available", "traded"],
+    default:"available",
     required: true,
   },
   createdAt:{

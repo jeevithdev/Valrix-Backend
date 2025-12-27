@@ -155,3 +155,54 @@ exports.tradeReject = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+exports.completeTrade = async (req, res) => {
+  try {
+    const trade = await Trade.findById(req.params.id);
+
+    if (!trade) {
+      return res.status(404).json({ message: "Trade not found" });
+    }
+
+    if (trade.status === "completed") {
+      return res.status(400).json({ message: "Trade already completed" });
+    }
+
+    if (trade.status !== "accepted") {
+      return res.status(400).json({ message: "Trade not ready to complete" });
+    }
+    if (
+      trade.owner.toString() !== req.user.id &&
+      trade.requester.toString() !== req.user.id
+    ) {
+      return res.status(403).json({ message: "Not authorized" });
+    }
+
+    const [requestedItem, offeredItem] = await Promise.all([
+      Item.findById(trade.requestedItem),
+      Item.findById(trade.offeredItem),
+    ]);
+    if (!offeredItem || !requestedItem) {
+      return res.status(404).json({ message: "Item not found" });
+    }
+    if (offeredItem.status !== "traded" || requestedItem.status !== "traded") {
+      return res.status(409).json({ message: "Items not locked for trade" });
+    }
+
+    const tempOwner = offeredItem.owner;
+    offeredItem.owner = requestedItem.owner;
+    requestedItem.owner = tempOwner;
+
+    offeredItem.status = "available";
+    requestedItem.status = "available";
+
+    await Promise.all([offeredItem.save(), requestedItem.save()]);
+
+    trade.status = "completed";
+    trade.completedAt = new Date();
+    await trade.save();
+
+    res.json({ message: "Trade completed successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

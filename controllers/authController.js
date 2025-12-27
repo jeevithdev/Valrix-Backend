@@ -11,13 +11,13 @@ exports.register = async (req, res) => {
     }
 
     const exsistingUser = await User.findOne({ email });
+    if (exsistingUser) {
+      return res.status(409).json({ message: "User Already Exists." });
+    }
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    if (exsistingUser) {
-      return res.status(409).json({ message: "User Already Exists." });
-    }
     const domainPatterns = [".edu", ".ac.in", ".edu.in"];
     const hasRollNumber = /\d+/.test(email);
 
