@@ -1,186 +1,128 @@
-﻿📦 College Barter System – Backend API
+📦 College Barter System – Backend
 
-A simple and secure backend authentication system built using Node.js, Express, MongoDB, and JWT, created for college students to exchange or barter items inside their campus.
+A backend API built with Node.js, Express, and MongoDB that allows college students to barter items securely within their campus.
 
-This backend ensures only verified college students can register and access the platform using their student email IDs.
+Only verified student emails are allowed to register.
 
 🚀 Features
 🔐 Authentication
 
-Student registration with email + password
+Student registration & login
 
-Login system with secure JWT token
+JWT-based authentication
 
-Password hashing using bcryptjs
+Password hashing using bcrypt
 
-Protected routes using JWT middleware
+Protected routes with middleware
 
-Logout support (frontend-side)
+🎓 Student-Only Access
 
-🎓 Student Email Verification
-
-Registration is only allowed for:
+Registration is allowed only for:
 
 Emails ending with .edu, .ac.in, .edu.in
 
-Emails that contain roll numbers (e.g., 21cse123, 22011109, etc.)
+Emails containing roll numbers / digits
 
-This ensures only real college students can join the barter platform.
+This blocks non-student emails like Gmail or Outlook.
 
-🛡 Security
+🔄 Barter System
 
-Hashed passwords
+Create trade requests
 
-Token verification middleware
+Accept or reject trades
 
-User ID attached via req.user for protected access
+Items are locked when a trade is accepted
 
-.env support for secrets, DB URL, and environment variables
+Trade is completed only after ownership is swapped
 
-📁 Project Structure
-college-barter-backend/
-│
-├── controllers/
-│ └── authController.js
-│
-├── middleware/
-│ └── authMiddleware.js
-│
-├── models/
-│ └── User.js
-│
-├── routes/
-│ └── auth.js
-│
-├── .env
-├── .gitignore
-├── app.js
-├── server.js
-├── package.json
-└── package-lock.json
+Prevents double trading of items
 
+Trade flow:
 
-⚙️ Installation & Setup
-1. Clone the repository
-git clone https://github.com/your-username/college-barter-backend.git
-cd college-barter-backend
+pending → accepted → completed / rejected
 
-2. Install dependencies
-npm install
-
-3. Create a .env file
-JWT_SECRETKEY = secretkey123
-MONGODB_URI = mongodb://127.0.0.1:27017/college-barter
-PORT = 5000
-
-4. Start the server
-npm start
-
-
-Server will run at:
-
-http://localhost:5000
-
-🔗 API Routes
-POST /api/auth/register
-
-Register a new student.
-
-Request Body:
-{
-  "name": "Jeev",
-  "email": "21cse123@mycollege.ac.in",
-  "password": "mypassword"
-}
-
-POST /api/auth/login
-
-Login and receive JWT token.
-
-Response:
-{
-  "message": "Login Successful",
-  "token": "...",
-  "user": {
-    "name": "Jeev",
-    "email": "21cse123@mycollege.ac.in"
-  }
-}
-
-GET /api/auth/profile
-
-Protected route. Requires token.
-
-Headers:
-Authorization: Bearer <your_token>
-
-Response:
-{
-  "name": "Jeev",
-  "email": "21cse123@mycollege.ac.in"
-}
-
-🧠 How Student Email Validation Works
-
-The backend checks:
-
-✔ email ends with:
-
-.edu
-
-.ac.in
-
-.edu.in
-
-✔ email contains roll numbers (digits)
-
-Example formats accepted:
-
-21cse123@university.ac.in
-
-22011109@students.edu.in
-
-student001@mit.edu
-
-This blocks:
-
-gmail.com
-
-outlook.com
-
-teacher@college.edu (no roll number)
-
-🔐 JWT Authentication Flow
-
-Student logs in
-
-Server generates JWT token
-
-Token is sent back to frontend
-
-Frontend stores it (localStorage/sessionStorage)
-
-For protected routes:
-Authorization: Bearer <token>
-
-Middleware verifies token & attaches req.user
-
-📌 Tech Stack
+🧱 Tech Stack
 
 Node.js
 
 Express.js
 
-MongoDB + Mongoose
+MongoDB (Atlas)
 
-JWT (jsonwebtoken)
+Mongoose
 
-bcryptjs
+JWT
+
+bcrypt
 
 dotenv
 
-🙌 Contributing
+📁 Project Structure
+College-BarterSystem-Backend/
+│
+├── src/
+│   ├── app.js
+│   ├── server.js
+│   ├── models/
+│   ├── controllers/
+│   ├── routes/
+│   └── middleware/
+│
+├── .env
+├── package.json
+└── README.md
 
-Pull requests are welcome!
+⚙️ Setup
+1️⃣ Clone
+git clone https://github.com/jeevithdev/College-BarterSystem-Backend.git
+cd College-BarterSystem-Backend
 
-For major changes, please open an issue first.
+2️⃣ Install
+npm install
+
+3️⃣ Environment Variables
+
+Create a .env file:
+
+PORT=5000
+JWT_SECRET=your_secret_key
+MONGODB_URI=mongodb+srv://<user>:<password>@<cluster>.mongodb.net/barterDB
+
+4️⃣ Run Server
+npm start
+
+
+Server runs at:
+
+http://localhost:5000
+
+🔗 API Routes
+Auth
+
+POST /api/auth/register
+
+POST /api/auth/login
+
+GET /api/auth/profile
+
+Trades
+
+POST /api/trades/request
+
+GET /api/trades/my-requests
+
+GET /api/trades/requests-for-me
+
+POST /api/trades/:id/accept
+
+POST /api/trades/:id/reject
+
+POST /api/trades/:id/complete
+
+📝 Notes
+
+Ownership changes only when a trade is completed
+
+Accepted trades lock items to prevent conflicts
+
+Designed with real backend practices in mind
