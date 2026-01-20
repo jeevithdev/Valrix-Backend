@@ -1,128 +1,152 @@
-📦 College Barter System – Backend
+Barter Exchange Platform (Backend)
 
-A backend API built with Node.js, Express, and MongoDB that allows college students to barter items securely within their campus.
-
-Only verified student emails are allowed to register.
+A backend system for a general-purpose barter and exchange platform that enables users to trade goods with one another without direct monetary transactions. The platform provides structured item listings, secure trade workflows, and a scalable foundation for trust-based peer-to-peer exchanges.
 
 🚀 Features
-🔐 Authentication
+🔐 Authentication & Authorization
 
-Student registration & login
+User registration and login
 
 JWT-based authentication
 
-Password hashing using bcrypt
+Ownership-based access control
 
-Protected routes with middleware
+Role-ready architecture (user, moderator, admin)
 
-🎓 Student-Only Access
+📦 Item Management
 
-Registration is allowed only for:
+Create, update, and delete item listings
 
-Emails ending with .edu, .ac.in, .edu.in
+Categorization and condition tracking
 
-Emails containing roll numbers / digits
+Expected item preferences for barter
 
-This blocks non-student emails like Gmail or Outlook.
+Ownership validation
 
-🔄 Barter System
+🔄 Trade System
 
-Create trade requests
+Trade request creation
 
-Accept or reject trades
+Accept and reject trade flows
 
-Items are locked when a trade is accepted
+Prevention of invalid trades (self-trade, duplicates)
 
-Trade is completed only after ownership is swapped
+Trade status management (pending, accepted, rejected)
 
-Prevents double trading of items
+🧩 System Design
 
-Trade flow:
+RESTful API architecture
 
-pending → accepted → completed / rejected
+Modular controllers and models
 
-🧱 Tech Stack
+Pagination-ready item retrieval
 
-Node.js
+Scalable and extensible schema design
 
-Express.js
+🛠 Tech Stack
 
-MongoDB (Atlas)
+Backend: Node.js, Express.js
 
-Mongoose
+Database: MongoDB (Mongoose ODM)
 
-JWT
+Authentication: JSON Web Tokens (JWT)
 
-bcrypt
+Architecture: MVC-style modular backend
 
-dotenv
+📂 Project Structure
+src/
+├── controllers/
+├── models/
+├── routes/
+├── middleware/
+├── config/
+└── app.js
 
-📁 Project Structure
-College-BarterSystem-Backend/
-│
-├── src/
-│   ├── app.js
-│   ├── server.js
-│   ├── models/
-│   ├── controllers/
-│   ├── routes/
-│   └── middleware/
-│
-├── .env
-├── package.json
-└── README.md
+🔗 API Overview
+/api/auth     → Authentication routes
+/api/users    → User operations
+/api/items    → Item listings
+/api/trades   → Trade requests and negotiation
 
-⚙️ Setup
-1️⃣ Clone
-git clone https://github.com/jeevithdev/College-BarterSystem-Backend.git
-cd College-BarterSystem-Backend
+📄 Data Models (Simplified)
+User
 
-2️⃣ Install
-npm install
+name
 
-3️⃣ Environment Variables
+email
 
-Create a .env file:
+password (hashed)
 
-PORT=5000
-JWT_SECRET=your_secret_key
-MONGODB_URI=mongodb+srv://<user>:<password>@<cluster>.mongodb.net/barterDB
+role
 
-4️⃣ Run Server
-npm start
+isVerified
 
+location
 
-Server runs at:
+reputationScore
 
-http://localhost:5000
+Item
 
-🔗 API Routes
-Auth
+title
 
-POST /api/auth/register
+description
 
-POST /api/auth/login
+category
 
-GET /api/auth/profile
+condition
 
-Trades
+expectedItems
 
-POST /api/trades/request
+owner
 
-GET /api/trades/my-requests
+status
 
-GET /api/trades/requests-for-me
+Trade
 
-POST /api/trades/:id/accept
+offeredItem
 
-POST /api/trades/:id/reject
+requestedItem
 
-POST /api/trades/:id/complete
+initiator
 
-📝 Notes
+status
 
-Ownership changes only when a trade is completed
+timestamps
 
-Accepted trades lock items to prevent conflicts
+📌 Project Status
 
-Designed with real backend practices in mind
+Core backend completed
+
+Trade lifecycle implemented (create / accept / reject)
+
+Generalized for public use
+
+Ready for feature expansion and deployment
+
+🔮 Future Enhancements
+
+User verification & reputation system
+
+Reporting and moderation tools
+
+Location-based item discovery
+
+Trade completion confirmation
+
+Notifications
+
+Admin dashboard
+
+🎯 Purpose
+
+This project demonstrates:
+
+Real-world backend system design
+
+Secure API development
+
+Trade-based business logic
+
+Scalable architecture planning
+
+Suitable for internship submissions, backend portfolios, and placement interviews.
