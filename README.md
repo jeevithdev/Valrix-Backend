@@ -1,186 +1,152 @@
-﻿📦 College Barter System – Backend API
+Barter Exchange Platform (Backend)
 
-A simple and secure backend authentication system built using Node.js, Express, MongoDB, and JWT, created for college students to exchange or barter items inside their campus.
-
-This backend ensures only verified college students can register and access the platform using their student email IDs.
+A backend system for a general-purpose barter and exchange platform that enables users to trade goods with one another without direct monetary transactions. The platform provides structured item listings, secure trade workflows, and a scalable foundation for trust-based peer-to-peer exchanges.
 
 🚀 Features
-🔐 Authentication
+🔐 Authentication & Authorization
 
-Student registration with email + password
+User registration and login
 
-Login system with secure JWT token
+JWT-based authentication
 
-Password hashing using bcryptjs
+Ownership-based access control
 
-Protected routes using JWT middleware
+Role-ready architecture (user, moderator, admin)
 
-Logout support (frontend-side)
+📦 Item Management
 
-🎓 Student Email Verification
+Create, update, and delete item listings
 
-Registration is only allowed for:
+Categorization and condition tracking
 
-Emails ending with .edu, .ac.in, .edu.in
+Expected item preferences for barter
 
-Emails that contain roll numbers (e.g., 21cse123, 22011109, etc.)
+Ownership validation
 
-This ensures only real college students can join the barter platform.
+🔄 Trade System
 
-🛡 Security
+Trade request creation
 
-Hashed passwords
+Accept and reject trade flows
 
-Token verification middleware
+Prevention of invalid trades (self-trade, duplicates)
 
-User ID attached via req.user for protected access
+Trade status management (pending, accepted, rejected)
 
-.env support for secrets, DB URL, and environment variables
+🧩 System Design
 
-📁 Project Structure
-college-barter-backend/
-│
+RESTful API architecture
+
+Modular controllers and models
+
+Pagination-ready item retrieval
+
+Scalable and extensible schema design
+
+🛠 Tech Stack
+
+Backend: Node.js, Express.js
+
+Database: MongoDB (Mongoose ODM)
+
+Authentication: JSON Web Tokens (JWT)
+
+Architecture: MVC-style modular backend
+
+📂 Project Structure
+src/
 ├── controllers/
-│ └── authController.js
-│
-├── middleware/
-│ └── authMiddleware.js
-│
 ├── models/
-│ └── User.js
-│
 ├── routes/
-│ └── auth.js
-│
-├── .env
-├── .gitignore
-├── app.js
-├── server.js
-├── package.json
-└── package-lock.json
+├── middleware/
+├── config/
+└── app.js
 
+🔗 API Overview
+/api/auth     → Authentication routes
+/api/users    → User operations
+/api/items    → Item listings
+/api/trades   → Trade requests and negotiation
 
-⚙️ Installation & Setup
-1. Clone the repository
-git clone https://github.com/your-username/college-barter-backend.git
-cd college-barter-backend
+📄 Data Models (Simplified)
+User
 
-2. Install dependencies
-npm install
+name
 
-3. Create a .env file
-JWT_SECRETKEY = secretkey123
-MONGODB_URI = mongodb://127.0.0.1:27017/college-barter
-PORT = 5000
+email
 
-4. Start the server
-npm start
+password (hashed)
 
+role
 
-Server will run at:
+isVerified
 
-http://localhost:5000
+location
 
-🔗 API Routes
-POST /api/auth/register
+reputationScore
 
-Register a new student.
+Item
 
-Request Body:
-{
-  "name": "Jeev",
-  "email": "21cse123@mycollege.ac.in",
-  "password": "mypassword"
-}
+title
 
-POST /api/auth/login
+description
 
-Login and receive JWT token.
+category
 
-Response:
-{
-  "message": "Login Successful",
-  "token": "...",
-  "user": {
-    "name": "Jeev",
-    "email": "21cse123@mycollege.ac.in"
-  }
-}
+condition
 
-GET /api/auth/profile
+expectedItems
 
-Protected route. Requires token.
+owner
 
-Headers:
-Authorization: Bearer <your_token>
+status
 
-Response:
-{
-  "name": "Jeev",
-  "email": "21cse123@mycollege.ac.in"
-}
+Trade
 
-🧠 How Student Email Validation Works
+offeredItem
 
-The backend checks:
+requestedItem
 
-✔ email ends with:
+initiator
 
-.edu
+status
 
-.ac.in
+timestamps
 
-.edu.in
+📌 Project Status
 
-✔ email contains roll numbers (digits)
+Core backend completed
 
-Example formats accepted:
+Trade lifecycle implemented (create / accept / reject)
 
-21cse123@university.ac.in
+Generalized for public use
 
-22011109@students.edu.in
+Ready for feature expansion and deployment
 
-student001@mit.edu
+🔮 Future Enhancements
 
-This blocks:
+User verification & reputation system
 
-gmail.com
+Reporting and moderation tools
 
-outlook.com
+Location-based item discovery
 
-teacher@college.edu (no roll number)
+Trade completion confirmation
 
-🔐 JWT Authentication Flow
+Notifications
 
-Student logs in
+Admin dashboard
 
-Server generates JWT token
+🎯 Purpose
 
-Token is sent back to frontend
+This project demonstrates:
 
-Frontend stores it (localStorage/sessionStorage)
+Real-world backend system design
 
-For protected routes:
-Authorization: Bearer <token>
+Secure API development
 
-Middleware verifies token & attaches req.user
+Trade-based business logic
 
-📌 Tech Stack
+Scalable architecture planning
 
-Node.js
-
-Express.js
-
-MongoDB + Mongoose
-
-JWT (jsonwebtoken)
-
-bcryptjs
-
-dotenv
-
-🙌 Contributing
-
-Pull requests are welcome!
-
-For major changes, please open an issue first.
+Suitable for internship submissions, backend portfolios, and placement interviews.
