@@ -2,13 +2,14 @@ const Item = require("../models/Item");
 
 exports.createItem = async (req, res) => {
   try {
-    const { title, description, category, condition} = req.body;
+    const { title, description,expectedItem, category, condition} = req.body;
 
     const item = new Item({
       title,
       description,
       category,
       condition,
+      expectedItem,
       owner: req.user.id,
     });
 

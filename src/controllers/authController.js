@@ -18,16 +18,8 @@ exports.register = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const domainPatterns = [".edu", ".ac.in", ".edu.in"];
-    const hasRollNumber = /\d+/.test(email);
 
-    const validDomain = domainPatterns.some((p) => email.endsWith(p));
-
-    if (!hasRollNumber || !validDomain) {
-      return res.status(400).json({
-        message: "Only valid college student email IDs are allowed",
-      });
-    }
+   
 
     const user = new User({ name, email, password: hashedPassword });
     await user.save();

@@ -32,6 +32,10 @@ const itemSchema = new mongoose.Schema({
     default:"available",
     required: true,
   },
+  expectedItem:{
+    type:String,
+    default:""
+  },
   createdAt:{
     type:Date,
     default:Date.now
