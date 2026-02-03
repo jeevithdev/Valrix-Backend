@@ -1,4 +1,4 @@
-Barter Exchange Platform (Backend)
+Valrix - Backend
 
 A backend system for a general-purpose barter and exchange platform that enables users to trade goods with one another without direct monetary transactions. The platform provides structured item listings, secure trade workflows, and a scalable foundation for trust-based peer-to-peer exchanges.
 
