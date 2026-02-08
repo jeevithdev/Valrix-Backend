@@ -2,19 +2,20 @@ const express = require("express");
 const app = express();
 const cors = require("cors")
 const mongoose = require("mongoose");
+const path = require("path");
 const authRoutes = require("./routes/auth");
 const itemRoutes = require("./routes/itemRoutes");
 const tradeRoutes = require("./routes/tradeRoutes");
 require("dotenv").config();
 
 app.use(express.json());
-
 const corsOptions = {
-  origin: 'http://localhost:5173',
+  origin: ['http://localhost:5173', 'http://localhost:5500', 'http://127.0.0.1:5500', 'http://localhost:5000', 'http://127.0.0.1:5000'],
   credentials: true,
   optionsSuccessStatus: 200
 };
 app.use(cors(corsOptions));
+// app.use(express.static(path.join(__dirname, '../public')));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/items", itemRoutes);

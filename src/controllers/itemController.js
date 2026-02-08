@@ -31,8 +31,10 @@ exports.getItems = async (req, res) => {
     if (page < 1) {
       return res.status(400).json({ message: "Invalid page number" });
     }
-
-    const query = { status: "available", owner: { $ne: req.user.id } };
+    const query = { status: "available" };
+    if (req.user && req.user.id) {
+      query.owner = { $ne: req.user.id };
+    }
 
     const totalItems = await Item.countDocuments(query);
     const items = await Item.find(query )
